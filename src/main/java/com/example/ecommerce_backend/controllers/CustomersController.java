@@ -41,5 +41,11 @@ public class CustomersController {
         return "Data Deleted";
     }
 
+    @GetMapping("/customers/{id}")
+    public Customers getsingle(@PathVariable Long id)
+    {
+        return cr.findById(id).orElse(null);
+    }
+
 
 }
