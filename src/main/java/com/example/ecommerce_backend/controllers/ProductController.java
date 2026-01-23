@@ -2,16 +2,16 @@ package com.example.ecommerce_backend.controllers;
 
 import com.example.ecommerce_backend.models.Products;
 import com.example.ecommerce_backend.repositories.ProductRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -38,7 +38,7 @@ public class ProductController {
     {
 
         // upload first file
-        String foldername = "/upload";
+        String foldername = "upload/";
         String filename1 = System.currentTimeMillis() + "_" + image1.getOriginalFilename();
         Path path1 = Paths.get(foldername, filename1);
         Files.write(path1, image1.getBytes());
@@ -61,6 +61,29 @@ public class ProductController {
         return productRepository.save(data);
 
 
+    }
+
+
+    @GetMapping("/product")
+    public List<Products> showAllProducts()
+    {
+        return productRepository.findAll();
+    }
+
+    @GetMapping("/product/{id}")
+    public Products getSingleProduct(@PathVariable Long id)
+    {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id)
+    {
+        productRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Product Deleted Successfully"
+        ));
     }
 
 

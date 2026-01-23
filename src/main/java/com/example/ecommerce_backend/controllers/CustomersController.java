@@ -2,9 +2,11 @@ package com.example.ecommerce_backend.controllers;
 
 import com.example.ecommerce_backend.models.Customers;
 import com.example.ecommerce_backend.repositories.CustomersRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -35,10 +37,14 @@ public class CustomersController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public String delete(@PathVariable Long id)
+    public ResponseEntity<?> delete(@PathVariable Long id)
     {
         cr.deleteById(id);
-        return "Data Deleted";
+
+        return ResponseEntity.ok(Map.of(
+                "status","success",
+                "message","Customer Deleted Successfully"
+        ));
     }
 
     @GetMapping("/customers/{id}")
